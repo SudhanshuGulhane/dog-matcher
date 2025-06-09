@@ -4,6 +4,8 @@ import {
     InputLabel, Button, Pagination, TextField
 } from '@mui/material';
 import axios from '../api/axiosInstance';
+import { Card, CardContent, CardMedia } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 const SearchPage = () => {
     const [breeds, setBreeds] = useState([]);
@@ -23,6 +25,16 @@ const SearchPage = () => {
 
     const pageSize = 10;
     
+    const navigate = useNavigate();
+    const handleLogout = async () => {
+        try {
+            await axios.post('/auth/logout');
+            navigate('/');
+        } catch (err) {
+            alert('Logout failed. Try again.');
+        }
+    };
+
     useEffect( () => {
         axios.get('/dogs/breeds').then(res => setBreeds(res.data))
     }, []);
@@ -89,87 +101,127 @@ const SearchPage = () => {
     return (
         <Container sx={{mt: 5}}>
             <Typography variant="h4" mb={3}>Browse Dogs</Typography>
+            
+            <Grid container spacing={2} alignItems="flex-end">
+                <Grid item xs={12} sm={6} md={3} lg={2}>
+                    <FormControl sx={{ mr: 2, minWidth: 200 }}>
+                        <InputLabel>Breed</InputLabel>
+                        <Select value={selectedBreed} onChange={e => setSelectedBreed(e.target.value)} label="Breed">
+                        <MenuItem value=""><em>All Breeds</em></MenuItem>
+                        {breeds.map(breed => (
+                            <MenuItem key={breed} value={breed}>{breed}</MenuItem>
+                        ))}
+                        </Select>
+                    </FormControl>
+                </Grid>
+                
+                <Grid item xs={12} sm={6} md={3} lg={2}>
+                    <FormControl sx={{ mr: 2, minWidth: 150 }}>
+                        <InputLabel>Sort</InputLabel>
+                        <Select value={sortOrder} onChange={e => setSortOrder(e.target.value)} label="Sort">
+                        <MenuItem value="asc">Breed Ascending</MenuItem>
+                        <MenuItem value="desc">Breed Descending</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Grid>
 
-            <FormControl sx={{ mr: 2, minWidth: 200 }}>
-                <InputLabel>Breed</InputLabel>
-                <Select value={selectedBreed} onChange={e => setSelectedBreed(e.target.value)} label="Breed">
-                <MenuItem value=""><em>All Breeds</em></MenuItem>
-                {breeds.map(breed => (
-                    <MenuItem key={breed} value={breed}>{breed}</MenuItem>
-                ))}
-                </Select>
-            </FormControl>
+                <Grid item xs={12} sm={6} md={3} lg={2}>
+                    <FormControl sx={{ mr: 2, minWidth: 200 }}>
+                        <TextField
+                            label="City"
+                            value={city}
+                            onChange={e => setCity(e.target.value)}
+                        />
+                        </FormControl>
+                </Grid>
+                    
+                <Grid item xs={12} sm={6} md={3} lg={2}>
+                    <FormControl sx={{ mr: 2, minWidth: 100 }}>
+                        <TextField
+                            label="State"
+                            value={stateCode}
+                            onChange={e => setStateCode(e.target.value.toUpperCase())}
+                        />
+                    </FormControl>
+                </Grid>
 
-            <FormControl sx={{ mr: 2, minWidth: 150 }}>
-                <InputLabel>Sort</InputLabel>
-                <Select value={sortOrder} onChange={e => setSortOrder(e.target.value)} label="Sort">
-                <MenuItem value="asc">Breed Ascending</MenuItem>
-                <MenuItem value="desc">Breed Descending</MenuItem>
-                </Select>
-            </FormControl>
+                <Grid item xs={12} sm={6} md={3} lg={2}>
+                    <FormControl sx={{ mr: 2, minWidth: 100 }}>
+                        <TextField
+                            label="Min Age"
+                            type="number"
+                            value={ageMin}
+                            onChange={e => setAgeMin(e.target.value)}
+                        />
+                        </FormControl>
+                </Grid>
+                
+                <Grid item xs={12} sm={6} md={3} lg={2}>
+                    <FormControl sx={{ mr: 2, minWidth: 100 }}>
+                        <TextField
+                            label="Max Age"
+                            type="number"
+                            value={ageMax}
+                            onChange={e => setAgeMax(e.target.value)}
+                        />
+                    </FormControl>
+                </Grid>
+                
+                <Grid item xs={12} sm={6} md={3} lg={2}>
+                    <Button variant="contained" disabled={favorites.length === 0} onClick={handleMatch} sx={{ height: '56px', width: '100%' }}>
+                        Generate Match
+                    </Button>
+                </Grid>
 
-            <FormControl sx={{ mr: 2, minWidth: 200 }}>
-                <TextField
-                    label="City"
-                    value={city}
-                    onChange={e => setCity(e.target.value)}
-                />
-                </FormControl>
+                <Grid item xs={12} sm={6} md={3} lg={2}>
+                    <Button variant="outlined" color="error" onClick={handleLogout} sx={{ height: '56px', width: '100%' }}>
+                        Logout
+                    </Button>
+                </Grid>
 
-                <FormControl sx={{ mr: 2, minWidth: 100 }}>
-                <TextField
-                    label="State"
-                    value={stateCode}
-                    onChange={e => setStateCode(e.target.value.toUpperCase())}
-                />
-            </FormControl>
-
-            <FormControl sx={{ mr: 2, minWidth: 100 }}>
-                <TextField
-                    label="Min Age"
-                    type="number"
-                    value={ageMin}
-                    onChange={e => setAgeMin(e.target.value)}
-                />
-                </FormControl>
-
-                <FormControl sx={{ mr: 2, minWidth: 100 }}>
-                <TextField
-                    label="Max Age"
-                    type="number"
-                    value={ageMax}
-                    onChange={e => setAgeMax(e.target.value)}
-                />
-            </FormControl>
-
-
-            <Button variant="contained" disabled={favorites.length === 0} onClick={handleMatch}>
-                Generate Match
-            </Button>
-
+            </Grid>
+            
             <Grid container spacing={2} mt={2}>
                 {dogs.map(dog => (
                 <Grid item xs={12} md={6} lg={4} key={dog.id}>
-                    <div style={{
-                    border: '1px solid #ccc',
-                    padding: 16,
-                    borderRadius: 8,
-                    backgroundColor: favorites.includes(dog.id) ? '#e0f7fa' : '#fff',
-                    }}>
-                    <img src={dog.img} alt={dog.name} width="100%" />
-                    <Typography variant="h6">{dog.name}</Typography>
-                    <Typography>Breed: {dog.breed}</Typography>
-                    <Typography>Age: {dog.age}</Typography>
-                    <Typography>ZIP Code: {dog.zip_code}</Typography>
-                    <Button
-                        size="small"
-                        variant={favorites.includes(dog.id) ? "outlined" : "contained"}
-                        onClick={() => toggleFavorite(dog.id)}
-                        sx={{ mt: 1 }}
-                    >
-                        {favorites.includes(dog.id) ? "Unfavorite" : "Favorite"}
-                    </Button>
-                    </div>
+                    <Card
+                        sx={{
+                            height: 360,
+                            width: '100%',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'space-between',
+                            border: favorites.includes(dog.id) ? '2px solid #2196f3' : '1px solid #ccc',
+                            borderRadius: 2,
+                            boxShadow: 2,
+                        }}
+                        >
+                        <CardMedia
+                            component="img"
+                            image={dog.img}
+                            alt={dog.name}
+                            sx={{
+                                height: 180,
+                                width: '100%',
+                                objectFit: 'cover',
+                            }}
+                        />
+                        <CardContent sx={{ flexGrow: 1 }}>
+                            <Typography variant="h6">{dog.name}</Typography>
+                            <Typography variant="body2">Breed: {dog.breed}</Typography>
+                            <Typography variant="body2">Age: {dog.age}</Typography>
+                            <Typography variant="body2">ZIP Code: {dog.zip_code}</Typography>
+                            <Button
+                                size="small"
+                                variant={favorites.includes(dog.id) ? 'outlined' : 'contained'}
+                                onClick={() => toggleFavorite(dog.id)}
+                                fullWidth
+                                sx={{ mt: 'auto' }}
+                                >
+                                {favorites.includes(dog.id) ? 'Unfavorite' : 'Favorite'}
+                            </Button>
+                        </CardContent>
+                    </Card>
                 </Grid>
                 ))}
             </Grid>
