@@ -11,7 +11,8 @@ const LoginPage = () => {
   const handleLogin = async () => {
     try {
       await axios.post('/auth/login', { name, email });
-      console.log('Login successful');
+      localStorage.setItem('isLoggedIn', 'true');
+      console.log('-> ', localStorage.getItem('isLoggedIn'));
       navigate('/search');
     } catch (error) {
       alert('Login failed. Please try again.');

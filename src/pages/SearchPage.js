@@ -29,6 +29,7 @@ const SearchPage = () => {
     const handleLogout = async () => {
         try {
             await axios.post('/auth/logout');
+            localStorage.removeItem('isLoggedIn');
             navigate('/');
         } catch (err) {
             alert('Logout failed. Try again.');
@@ -36,6 +37,7 @@ const SearchPage = () => {
     };
 
     useEffect( () => {
+        console.log(document.cookie.includes('fetch-access-token'))
         axios.get('/dogs/breeds').then(res => setBreeds(res.data))
     }, []);
 

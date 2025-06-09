@@ -8,9 +8,10 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<LoginPage />} />
-        <Route path="/search" 
+        <Route
+          path="/search"
           element={
-            document.cookie.includes('fetch-access-token')
+            localStorage.getItem('isLoggedIn') === 'true'
               ? <SearchPage />
               : <Navigate to="/" />
           }
