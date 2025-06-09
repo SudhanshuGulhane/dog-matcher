@@ -1,70 +1,99 @@
-# Getting Started with Create React App
+# 🐶 Dog Matcher App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A React + Material-UI (MUI) web application designed to help users find their perfect canine companion. Browse, filter, favorite, and get matched with adoptable dogs powered by the Fetch.com API.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## 🚀 Features
 
-### `npm start`
+* **✅ User Authentication:**
+    * Simple login using name and email.
+    * Logout functionality for secure sessions.
+    * _Optional:_ Route protection implemented using cookies for enhanced security.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+* **🐕 Browse Dogs:**
+    * **Comprehensive Filtering:** Easily narrow down your search results by:
+        * Breed
+        * Location (City and State)
+        * Age (Minimum and Maximum)
+    * **Flexible Sorting:** Arrange dog listings by:
+        * Breed (Ascending/Descending)
+        * Name (Ascending/Descending)
+        * Age (Ascending/Descending)
+    * **Paginated Results:** Efficiently navigate through large sets of search results.
+    * **Instant Filter Reset:** Clear all applied filters with a single click.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+* **⭐ Favorite Dogs:**
+    * Intuitive interface to add or remove dogs from your personal favorites list.
+    * Send your curated list of favorite dogs to the backend to generate a match.
 
-### `npm test`
+* **🎯 Match Generation:**
+    * Receive a single, best-matched dog from your favorited selections, based on the backend's matching algorithm.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+* **🧹 Responsive UI:**
+    * **Consistent Dog Card Layout:** Utilizes Material-UI Cards for a clean and uniform display of dog information.
+    * **Mobile-Friendly Filter Panel:** The filter and sorting controls are designed to be clean and easy to use on various screen sizes.
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 📦 Tech Stack
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+The application is built using modern web technologies to ensure a robust, scalable, and user-friendly experience:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+* **React:** A declarative, component-based JavaScript library for building user interfaces.
+    * Utilizes **React Router** for declarative routing and navigation.
+* **Material-UI (MUI):** A comprehensive React UI framework that implements Google's Material Design. Provides pre-built, accessible, and customizable components.
+* **Axios:** A promise-based HTTP client for making API requests. Configured with `withCredentials` for handling cookies and session management.
+* **Query String / URL Search Params:** For managing and parsing URL query parameters, enabling filter state synchronization.
+* **Fetch.com API:** Integrates with a provided backend API to fetch dog data and manage user interactions.
 
-### `npm run eject`
+---
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## 🧪 API Reference Used
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+The following endpoints from the Fetch.com API (provided backend) are utilized:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+* `POST /auth/login`
+* `POST /auth/logout`
+* `GET /dogs/breeds`
+* `GET /dogs/search`
+* `POST /dogs`
+* `POST /dogs/match`
+* `POST /locations`
+* `POST /locations/search`
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+---
 
-## Learn More
+## 🛠️ Getting Started
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+1.  **Clone the Repository**
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+    ```bash
+    git clone [https://github.com/your-username/dog-matcher.git](https://github.com/your-username/dog-matcher.git)
+    cd dog-matcher
+    ```
 
-### Code Splitting
+    _Replace the URL above with your actual repo link._
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+2.  **Install Dependencies**
 
-### Analyzing the Bundle Size
+    ```bash
+    npm install
+    ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+3.  **Run the App**
 
-### Making a Progressive Web App
+    ```bash
+    npm start
+    ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+    _This will launch the app on `http://localhost:3000`_
 
-### Advanced Configuration
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## 🔐 Notes on Authentication
 
-### Deployment
+* You must log in with your name and email on the login screen.
+* An authentication cookie (`fetch-access-token`) is automatically handled by the browser for subsequent requests, ensuring a seamless user experience.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+---
