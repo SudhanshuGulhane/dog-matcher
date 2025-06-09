@@ -17,6 +17,9 @@ const SearchPage = () => {
     const [city, setCity] = useState('');
     const [stateCode, setStateCode] = useState('');
     const [zipCodes, setZipCodes] = useState([]);
+    const [ageMin, setAgeMin] = useState('');
+    const [ageMax, setAgeMax] = useState('');
+
 
     const pageSize = 10;
     
@@ -30,6 +33,8 @@ const SearchPage = () => {
                 params: {
                     breeds: selectedBreed ? [selectedBreed] : undefined,
                     zipCodes: zipCodes.length > 0 ? zipCodes : undefined,
+                    ageMin: ageMin !== '' ? Number(ageMin) : undefined,
+                    ageMax: ageMax !== '' ? Number(ageMax) : undefined,
                     sort: `breed:${sortOrder}`,
                     size: pageSize,
                     from: (currentPage - 1) * pageSize,
@@ -39,7 +44,7 @@ const SearchPage = () => {
             setTotalPages(Math.ceil(res.data.total/pageSize));
         };
         fetchDogIds();
-    }, [selectedBreed, sortOrder, currentPage, zipCodes]);
+    }, [selectedBreed, sortOrder, currentPage, zipCodes, ageMin, ageMax]);
 
     useEffect(() => {
         if (dogIds.length === 0) return;
@@ -118,6 +123,25 @@ const SearchPage = () => {
                     onChange={e => setStateCode(e.target.value.toUpperCase())}
                 />
             </FormControl>
+
+            <FormControl sx={{ mr: 2, minWidth: 100 }}>
+                <TextField
+                    label="Min Age"
+                    type="number"
+                    value={ageMin}
+                    onChange={e => setAgeMin(e.target.value)}
+                />
+                </FormControl>
+
+                <FormControl sx={{ mr: 2, minWidth: 100 }}>
+                <TextField
+                    label="Max Age"
+                    type="number"
+                    value={ageMax}
+                    onChange={e => setAgeMax(e.target.value)}
+                />
+            </FormControl>
+
 
             <Button variant="contained" disabled={favorites.length === 0} onClick={handleMatch}>
                 Generate Match
