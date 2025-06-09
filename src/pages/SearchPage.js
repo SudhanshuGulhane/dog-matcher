@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
     Container, Typography, Grid, MenuItem, Select, FormControl,
-    InputLabel, Button, Pagination
+    InputLabel, Button, Pagination, TextField
 } from '@mui/material';
 import axios from '../api/axiosInstance';
 
@@ -14,6 +14,9 @@ const SearchPage = () => {
     const [totalPages, setTotalPages] = useState(1);
     const [currentPage, setCurrentPage] = useState(1);
     const [sortOrder, setSortOrder] = useState('asc');
+    const [city, setCity] = useState('');
+    const [stateCode, setStateCode] = useState('');
+    const [zipCodes, setZipCodes] = useState([]);
 
     const pageSize = 10;
     
@@ -26,6 +29,7 @@ const SearchPage = () => {
             const res = await axios.get('/dogs/search', {
                 params: {
                     breeds: selectedBreed ? [selectedBreed] : undefined,
+                    zipCodes: zipCodes.length > 0 ? zipCodes : undefined,
                     sort: `breed:${sortOrder}`,
                     size: pageSize,
                     from: (currentPage - 1) * pageSize,
@@ -35,7 +39,7 @@ const SearchPage = () => {
             setTotalPages(Math.ceil(res.data.total/pageSize));
         };
         fetchDogIds();
-    }, [selectedBreed, sortOrder, currentPage]);
+    }, [selectedBreed, sortOrder, currentPage, zipCodes]);
 
     useEffect(() => {
         if (dogIds.length === 0) return;
@@ -54,6 +58,28 @@ const SearchPage = () => {
             prev.includes(dogId) ? prev.filter(id => id !== dogId) : [...prev, dogId]
         )
     }
+
+    useEffect(() => {
+        const fetchZipCodes = async () => {
+            if (!city && !stateCode) {
+                setZipCodes([]);
+                return;
+            }
+
+            try {
+                const res = await axios.post('/locations/search', {
+                    city: city || undefined,
+                    states: stateCode ? [stateCode] : undefined,
+                    size: 100,
+                });
+                setZipCodes(res.data.results.map(loc => loc.zip_code));
+            } catch (err) {
+                console.error("Failed to fetch ZIP codes", err);
+            }
+        };
+
+        fetchZipCodes();
+    }, [city, stateCode]);
 
     return (
         <Container sx={{mt: 5}}>
@@ -75,6 +101,22 @@ const SearchPage = () => {
                 <MenuItem value="asc">Breed Ascending</MenuItem>
                 <MenuItem value="desc">Breed Descending</MenuItem>
                 </Select>
+            </FormControl>
+
+            <FormControl sx={{ mr: 2, minWidth: 200 }}>
+                <TextField
+                    label="City"
+                    value={city}
+                    onChange={e => setCity(e.target.value)}
+                />
+                </FormControl>
+
+                <FormControl sx={{ mr: 2, minWidth: 100 }}>
+                <TextField
+                    label="State"
+                    value={stateCode}
+                    onChange={e => setStateCode(e.target.value.toUpperCase())}
+                />
             </FormControl>
 
             <Button variant="contained" disabled={favorites.length === 0} onClick={handleMatch}>
